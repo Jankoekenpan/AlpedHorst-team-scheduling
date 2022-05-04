@@ -19,9 +19,6 @@ object Constants {
     val lastSlot: TimeSlot = TimeSlot(end.minus(duration), end)
 }
 
-
-
-
 class TimeSlotSpec extends AnyFlatSpec with should.Matchers {
     import Constants.*
 
@@ -56,3 +53,5 @@ class TimeSlotSpec extends AnyFlatSpec with should.Matchers {
     }
 
 }
+
+//TODO time parse tests
