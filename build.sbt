@@ -3,4 +3,7 @@ lazy val root = project.in(file("."))
         name := "Alpe d'Horst team scheduling",
         version := "0.1",
         scalaVersion := "3.1.2",
+
+        libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.11" % "test",
+        libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % "test",
     )
