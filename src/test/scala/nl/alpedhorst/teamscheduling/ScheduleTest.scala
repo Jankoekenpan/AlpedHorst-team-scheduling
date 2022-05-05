@@ -18,8 +18,6 @@ object ScheduleTest {
     val exampleTeam4 = Team("4", _ => false)
     val exampleTeams = List(exampleTeam1, exampleTeam2, exampleTeam3, exampleTeam4)
 
-    val exampleStartTime = LocalDateTime.of(2022, 8, 7, 11, 0)
-    val exampleDuration = Duration.ofHours(1L)
 }
 
 class ScheduleSpec extends AnyFlatSpec with should.Matchers {

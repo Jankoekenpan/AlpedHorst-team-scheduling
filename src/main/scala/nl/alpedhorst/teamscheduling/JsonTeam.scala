@@ -13,8 +13,12 @@ object JsonTeam {
         teamJson("Teamnaam").str
 
     private def convertTime(time: String): LocalTime = {
-        LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"))
+        var localTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"))
+        localTime
     }
+
+    private def fixUpEndTime(endTime: LocalTime): LocalTime =
+        if LocalTime.MIN.equals(endTime) then LocalTime.MAX else endTime
 
     def unavailability(teamJson: ujson.Obj): Unavailability = {
         val mapBuilder = Map.newBuilder[Day, Duration]
@@ -35,9 +39,9 @@ object JsonTeam {
                     val seqBuilder = Seq.newBuilder[Interval]
 
                     if (!time1.isBlank)
-                        seqBuilder.addOne(Interval(convertTime(time1), convertTime(time2)))
+                        seqBuilder.addOne(Interval(convertTime(time1), fixUpEndTime(convertTime(time2))))
                     if (!time3.isBlank)
-                        seqBuilder.addOne(Interval(convertTime(time3), convertTime(time4)))
+                        seqBuilder.addOne(Interval(convertTime(time3), fixUpEndTime(convertTime(time4))))
 
                     Duration.Intervals(seqBuilder.result())
             }
@@ -69,7 +73,8 @@ enum Duration {
 }
 
 case class Interval(from: LocalTime, to: LocalTime) {
+    assert(from.isBefore(to))
 
-    def contains(localTime: LocalTime): Boolean = from.compareTo(localTime) <= 0 && to.compareTo(localTime) > 0;
+    def contains(localTime: LocalTime): Boolean = from.isBefore(localTime) && localTime.isBefore(to)
 
 }

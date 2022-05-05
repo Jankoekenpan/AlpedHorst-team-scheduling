@@ -20,6 +20,7 @@ import java.io.File
             //println(teams)
             val schedules = Schedule.calculate(teams.toList, slotCount)
             println(schedules.head)
+            //TODO verify the schedule is valid
             //TODO write nice output.
 
         case _ =>

@@ -40,7 +40,7 @@ object Schedule {
     def allTeamsCanMakeIt(schedule: Schedule): Boolean =
         schedule.zipWithIndex.forall((team, index) => team.canMakeIt(index))
     def allPositionsFilled(schedule: Schedule): Boolean =
-        !schedule.exists(_ == null)
+        !schedule.contains(null)
     def containsAllTeamsExactlyOnce(schedule: Schedule, teams: Iterable[Team]): Boolean =
         schedule.toSet.size == teams.size
 

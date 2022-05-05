@@ -8,7 +8,7 @@ import nl.alpedhorst.teamscheduling.{Slot, TimeSlot, convertIndexToTimeSlot, con
 import java.time.temporal.ChronoUnit
 import java.time.{Duration, LocalDateTime}
 
-object Constants {
+object TimeTest {
     import nl.alpedhorst.teamscheduling.{eventStartTime, eventEndTime, slotDuration, slotCount}
 
     val duration: Duration = slotDuration
@@ -20,7 +20,7 @@ object Constants {
 }
 
 class TimeSlotSpec extends AnyFlatSpec with should.Matchers {
-    import Constants.*
+    import TimeTest.*
 
     "An index conversion round-trip" should "result in the same value as the starting value" in {
         var index   = convertTimeSlotToIndex(firstSlot, start, duration)
