@@ -11,6 +11,47 @@ val slotCount       = calculateSlotCount(eventStartTime, eventEndTime, slotDurat
 
 type Slot = Int
 
+object TimeSlot {
+    import nl.alpedhorst.teamscheduling.Duration.{WholeDay, Intervals}
+    import nl.alpedhorst.teamscheduling.Interval
+
+    def convertTeam(jsonTeam: JsonTeam, eventStart: LocalDateTime, slotDuration: Duration): Team = {
+        val teamName: String = jsonTeam.name
+        val unavailable: Slot => Boolean = convertUnavailable(jsonTeam.unavailability, eventStart, slotDuration)
+        Team(teamName, unavailable)
+    }
+
+    def convertUnavailable(unavailability: Unavailability, eventStart: LocalDateTime, slotDuration: Duration)(slot: Slot): Boolean = {
+        val timeSlot: TimeSlot = convertIndexToTimeSlot(slot, eventStart, slotDuration)
+
+        val day1: Day = timeSlot.start.getDayOfMonth.asInstanceOf[Day]
+        val day2: Day = timeSlot.end.getDayOfMonth.asInstanceOf[Day]
+
+        (unavailability(day1), unavailability(day2)) match {
+            case (WholeDay, _) => true
+            case (_, WholeDay) => true
+            case (Intervals(intervals1), Intervals(intervals2)) =>
+                if (day1 == day2) {
+                    //intervals1 == intervals2
+                    intervals1.exists(interval => clashes(timeSlot, interval))
+                } else {
+                    intervals1.exists(interval => clashes(timeSlot, interval)) || intervals2.exists(interval => clashes(timeSlot, interval))
+                }
+        }
+    }
+
+    private def clashes(timeSlot: TimeSlot, interval: Interval): Boolean = {
+        val slotStart = timeSlot.start.toLocalTime
+        val slotEnd = timeSlot.end.toLocalTime
+
+        interval.contains(slotStart)
+            || interval.contains(slotEnd)
+            || (interval.from.isBefore(slotStart) && interval.to.isAfter(slotEnd))
+            || (slotStart.isBefore(interval.from) && slotEnd.isAfter(interval.to))
+    }
+
+}
+
 def calculateSlotCount(start: LocalDateTime, end: LocalDateTime, slotDuration: Duration): Int =
     (start.until(end, ChronoUnit.MINUTES) / slotDuration.toMinutes).toInt
 
@@ -32,7 +73,6 @@ def convertTimeSlotToIndex(timeSlot: TimeSlot, eventStart: LocalDateTime, slotDu
     (minutesAfterStart / slotDuration.toMinutes).toInt
 }
 
-
 class TimeSlot(val start: LocalDateTime, val end: LocalDateTime) {
     assert(start.isBefore(end), "start must be before end")
 
@@ -47,3 +87,4 @@ class TimeSlot(val start: LocalDateTime, val end: LocalDateTime) {
 
     override def toString: String = s"TimeSlot(start=${start},end=${end})"
 }
+

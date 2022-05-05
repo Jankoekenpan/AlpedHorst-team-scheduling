@@ -53,5 +53,3 @@ class TimeSlotSpec extends AnyFlatSpec with should.Matchers {
     }
 
 }
-
-//TODO time parse tests

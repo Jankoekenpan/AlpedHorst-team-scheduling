@@ -2,16 +2,28 @@ package nl.alpedhorst.teamscheduling
 
 import nl.alpedhorst.teamscheduling.*
 
-
-
+import java.io.File
 
 @main def main(): Unit = {
 
-    //TODO read file contents
-    //TODO optionally? do some conversion from available times to slots
-    //TODO perform calculation
-    //TODO pick a schedule (need to check whether a valid schedule can exist)
-    //TODO convert to human-readable time-slots
-    //TODO write out file
+    val endpoint = IO.readEndPoint(new File("endpoint"))
+    val json = IO.fetchJson(endpoint)
+    //println(json)
+
+    json match {
+        case ujson.Arr(jsonValues) =>
+            val jsonTeams = jsonValues
+                .filter(_ match { case ujson.Obj(map) if map.contains("Teamnaam") => true; case _ => false})
+                .map(_.asInstanceOf[ujson.Obj])
+                .map(JsonTeam.jsonTeam)
+            val teams = jsonTeams.map(jsonTeam => TimeSlot.convertTeam(jsonTeam, eventStartTime, slotDuration))
+            //println(teams)
+            val schedules = Schedule.calculate(teams.toList, slotCount)
+            println(schedules.head)
+            //TODO write nice output.
+
+        case _ =>
+            throw new RuntimeException("Expected json array")
+    }
 
 }
