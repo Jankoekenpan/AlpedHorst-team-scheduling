@@ -19,10 +19,9 @@ import java.io.File
             val teams = jsonTeams.map(jsonTeam => TimeSlot.convertTeam(jsonTeam, eventStartTime, slotDuration))
             //println(teams)
             val schedules = Schedule.calculate(teams.toList, slotCount)
-            println(schedules.head)
-            //TODO verify the schedule is valid
-            //TODO write nice output.
-
+            val schedule = schedules.head
+            println(schedule)
+            IO.writeFile(new File("schedule.txt"), schedule, eventStartTime, slotDuration)
         case _ =>
             throw new RuntimeException("Expected json array")
     }

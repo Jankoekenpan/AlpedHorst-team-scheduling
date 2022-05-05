@@ -2,7 +2,7 @@ package nl.alpedhorst.teamscheduling
 
 import nl.alpedhorst.teamscheduling.Slot
 
-class Team(private val name: String, unavailable: Slot => Boolean) {
+class Team(val name: String, unavailable: Slot => Boolean) {
     def canMakeIt(slot: Slot): Boolean = !unavailable(slot)
 
     override def equals(obj: Any): Boolean = obj match {

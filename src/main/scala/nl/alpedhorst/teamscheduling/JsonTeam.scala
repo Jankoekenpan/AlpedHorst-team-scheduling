@@ -73,7 +73,7 @@ enum Duration {
 }
 
 case class Interval(from: LocalTime, to: LocalTime) {
-    assert(from.isBefore(to))
+    assert(from.isBefore(to), s"\"from\" must be earlier in time then \"to\". Got from=${from}, to=${to}.")
 
     def contains(localTime: LocalTime): Boolean = from.isBefore(localTime) && localTime.isBefore(to)
 
