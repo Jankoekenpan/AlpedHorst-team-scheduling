@@ -7,7 +7,7 @@ import scala.annotation.targetName
 
 extension (lhs: Boolean)
     @targetName("implies")
-    def ==>(rhs: => Boolean): Boolean = !lhs || rhs
+    inline def ==>(inline rhs: Boolean): Boolean = !lhs || rhs
 
 @main def main(): Unit = {
 
