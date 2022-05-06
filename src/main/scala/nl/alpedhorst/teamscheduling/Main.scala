@@ -3,6 +3,11 @@ package nl.alpedhorst.teamscheduling
 import nl.alpedhorst.teamscheduling.*
 
 import java.io.File
+import scala.annotation.targetName
+
+extension (lhs: Boolean)
+    @targetName("implies")
+    def ==>(rhs: => Boolean): Boolean = !lhs || rhs
 
 @main def main(): Unit = {
 
@@ -21,6 +26,7 @@ import java.io.File
             val schedules = Schedule.calculate(teams.toList, slotCount)
             val schedule = schedules.head
             println(schedule)
+            assert(schedule.zipWithIndex.forall((team, slot) => (team != null) ==> team.canMakeIt(slot)), "Not all teams can make it.")
             IO.writeFile(new File("schedule.txt"), schedule, eventStartTime, slotDuration)
         case _ =>
             throw new RuntimeException("Expected json array")

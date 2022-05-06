@@ -10,6 +10,11 @@ val slotDuration    = Duration.ofHours(1)                                       
 val slotCount       = calculateSlotCount(eventStartTime, eventEndTime, slotDuration)        // 147 slots
 
 type Slot = Int
+extension (localTime: java.time.LocalTime)
+    def <(other: java.time.LocalTime): Boolean = localTime.isBefore(other)
+    def >(other: java.time.LocalTime): Boolean = localTime.isAfter(other)
+    def <=(other: java.time.LocalTime): Boolean = localTime.compareTo(other) <= 0
+    def >=(other: java.time.LocalTime): Boolean = localTime.compareTo(other) >= 0
 
 object TimeSlot {
     import nl.alpedhorst.teamscheduling.Duration.{WholeDay, Intervals}
@@ -46,8 +51,8 @@ object TimeSlot {
 
         interval.contains(slotStart)
             || interval.contains(slotEnd)
-            || (interval.from.isBefore(slotStart) && interval.to.isAfter(slotEnd))
-            || (slotStart.isBefore(interval.from) && slotEnd.isAfter(interval.to))
+            || interval.from <= slotStart && interval.to >= slotEnd
+            || slotStart <= interval.from && slotEnd >= interval.to
     }
 
 }
