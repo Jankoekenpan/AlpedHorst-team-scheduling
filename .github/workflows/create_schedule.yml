@@ -1,6 +1,9 @@
 name: Create Schedule
 
-on: [push]
+on:
+  push:
+    tags:
+      - '*'
 
 jobs:
   run_script:
@@ -19,7 +22,7 @@ jobs:
         env:
           ENDPOINT: ${{ secrets.ENDPOINT }}
         run: sbt run
-      - name: Publish schedule as release
+      - name: Publish Schedule as Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
