@@ -23,6 +23,8 @@ jobs:
           ENDPOINT: ${{ secrets.ENDPOINT }}
         run: sbt run
       - name: Publish Schedule as Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
