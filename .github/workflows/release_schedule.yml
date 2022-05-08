@@ -6,7 +6,7 @@ on:
       - '*'
 
 jobs:
-  run_script:
+  publish_schedule_as_release:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,6 +24,7 @@ jobs:
         run: sbt run
       - name: Publish Schedule as Release
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
             schedule.txt

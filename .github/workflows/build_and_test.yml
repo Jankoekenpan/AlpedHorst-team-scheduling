@@ -3,7 +3,7 @@ name: Create Schedule
 on: [push, pull_request]
 
 jobs:
-  run_script:
+  build:
     runs-on: ubuntu-latest
 
     steps:
