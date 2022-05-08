@@ -11,14 +11,14 @@ extension (lhs: Boolean)
 
 @main def main(): Unit = {
 
-    val endpoint = IO.readEndPoint(new File("endpoint"))
+    val endpoint = IO.readEndPoint(new File("endpoint"))    //TODO get from environment
     val json = IO.fetchJson(endpoint)
     //println(json)
 
     json match {
         case ujson.Arr(jsonValues) =>
             val jsonTeams = jsonValues
-                .filter(_ match { case ujson.Obj(map) if map.contains("Teamnaam") => true; case _ => false})
+                .filter(_ match { case ujson.Obj(map) if map.contains("Teamnaam") => true; case _ => false; })
                 .map(_.asInstanceOf[ujson.Obj])
                 .map(JsonTeam.jsonTeam)
             val teams = jsonTeams.map(jsonTeam => TimeSlot.convertTeam(jsonTeam, eventStartTime, slotDuration))

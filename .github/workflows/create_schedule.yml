@@ -1,0 +1,26 @@
+name: Create Schedule
+
+on: [push]
+
+jobs:
+  run_script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup JDK 18
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '18'
+          cache: 'sbt'
+      - name: Build and Run
+        env:
+          ENDPOINT: ${{ secrets.ENDPOINT }}
+        run: sbt run
+      - name: Publish schedule as release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            schedule.txt

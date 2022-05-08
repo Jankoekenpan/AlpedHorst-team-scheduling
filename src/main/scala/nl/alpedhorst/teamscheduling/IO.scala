@@ -9,8 +9,11 @@ import java.time.{Duration, LocalDateTime}
 object IO {
 
     def readEndPoint(textFile: File): String = {
+        var endPoint = System.getenv("ENDPOINT")
+        if (endPoint != null && !endPoint.isBlank) return endPoint
         val reader = new BufferedReader(new InputStreamReader(new FileInputStream(textFile)))
-        reader.readLine()
+        endPoint = reader.readLine()
+        endPoint
     }
 
     def fetchJson(endpoint: String): ujson.Value = {
