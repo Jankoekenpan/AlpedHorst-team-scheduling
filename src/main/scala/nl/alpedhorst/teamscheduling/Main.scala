@@ -11,7 +11,7 @@ extension (lhs: Boolean)
 
 @main def main(): Unit = {
 
-    val endpoint = IO.readEndPoint(new File("endpoint"))    //TODO get from environment
+    val endpoint = IO.readEndPoint(new File("endpoint"))
     val json = IO.fetchJson(endpoint)
     //println(json)
 

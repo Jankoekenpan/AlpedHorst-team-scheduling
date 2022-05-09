@@ -6,7 +6,6 @@ import matchers.*
 
 import java.time.LocalTime
 
-//TODO parse json, test availability of teams
 object AvailabilityTest {
     val teamJson =
         """{
