@@ -15,7 +15,5 @@ jobs:
           distribution: 'temurin'
           java-version: '18'
           cache: 'sbt'
-      - name: Build and Run
-        env:
-          ENDPOINT: ${{ secrets.ENDPOINT }}
+      - name: Build and Test
         run: sbt test
