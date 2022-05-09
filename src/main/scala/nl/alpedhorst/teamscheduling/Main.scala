@@ -11,6 +11,13 @@ extension (lhs: Boolean)
 
 @main def main(): Unit = {
 
+    //TODO make the following changes:
+    //TODO  0. read the team availability data from csv instead of json
+    //TODO a few optimizations:
+    //TODO  1. sort the teams by available time (lowest durations go first)
+    //TODO  2. use LazyList to avoid some computations
+    //TODO  3. don't iterate over all indexes, only iterate over those indexes in which the team can make it.
+
     val endpoint = IO.readEndPoint(new File("endpoint"))
     val json = IO.fetchJson(endpoint)
     //println(json)
