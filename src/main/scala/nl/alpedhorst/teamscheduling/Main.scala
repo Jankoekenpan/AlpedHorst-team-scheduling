@@ -15,8 +15,7 @@ extension (lhs: Boolean)
     //TODO  0. read the team availability data from csv instead of json
     //TODO a few optimizations:
     //TODO  1. sort the teams by available time (lowest durations go first)
-    //TODO  2. use LazyList to avoid some computations
-    //TODO  3. don't iterate over all indexes, only iterate over those indexes in which the team can make it.
+    //TODO  2. don't iterate over all indexes, only iterate over those indexes in which the team can make it (should perform better when many teams are only available in a small window)
 
     val endpoint = IO.readEndPoint(new File("endpoint"))
     val json = IO.fetchJson(endpoint)

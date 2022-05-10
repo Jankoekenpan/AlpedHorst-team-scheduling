@@ -12,18 +12,16 @@ extension (schedule: Schedule)
 object Schedule {
     def emptySchedule(slotCount: Int): Schedule = IndexedSeq.fill(slotCount)(null)
 
-    //TODO use LazyList[Schedule] instead?
-
-    def calculate(teams: List[Team], slotCount: Int): List[Schedule] = {
-        var schedules: List[Schedule] = List(emptySchedule(slotCount))
+    def calculate(teams: List[Team], slotCount: Int): LazyList[Schedule] = {
+        var schedules: LazyList[Schedule] = LazyList(emptySchedule(slotCount))
         for (team <- teams) {
             schedules = schedules.flatMap(schedule => successorSchedules(schedule, team))
         }
         schedules
     }
 
-    private def successorSchedules(acc: Schedule, team: Team): List[Schedule] = {
-        val result = List.newBuilder[Schedule]
+    private def successorSchedules(acc: Schedule, team: Team): LazyList[Schedule] = {
+        val result = LazyList.newBuilder[Schedule]
 
         var slotCandidate = 0
         while (slotCandidate < acc.length) {
