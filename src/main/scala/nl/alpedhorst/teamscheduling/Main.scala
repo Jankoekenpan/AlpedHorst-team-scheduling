@@ -26,7 +26,7 @@ extension (lhs: Boolean)
             val jsonTeams = jsonValues
                 .filter(_ match { case ujson.Obj(map) if map.contains("Teamnaam") => true; case _ => false; })
                 .map(_.asInstanceOf[ujson.Obj])
-                .map(JsonTeam.jsonTeam)
+                .map(InputTeam.jsonTeam)
             val teams = jsonTeams.map(jsonTeam => TimeSlot.convertTeam(jsonTeam, eventStartTime, slotDuration))
             //println(teams)
             val schedules = Schedule.calculate(teams.toList, slotCount)

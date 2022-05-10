@@ -56,7 +56,7 @@ class AvailabilitySpec extends AnyFlatSpec with should.Matchers {
     import AvailabilityTest.*
 
     "time" should "convert correctly" in {
-        val jsonTeam = JsonTeam.jsonTeam(json)
+        val jsonTeam = InputTeam.jsonTeam(json)
 
         val expected: Unavailability = Map(
             1 -> Duration.Intervals(Seq(

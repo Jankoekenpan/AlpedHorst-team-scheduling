@@ -6,6 +6,9 @@ import java.net.http.{HttpClient, HttpRequest, HttpResponse}
 import java.time.format.{DateTimeFormatter, FormatStyle}
 import java.time.{Duration, LocalDateTime}
 
+import com.github.tototoshi.csv.CSVReader
+import com.github.tototoshi.csv.defaultCSVFormat
+
 object IO {
 
     def readEndPoint(textFile: File): String = {
@@ -27,6 +30,13 @@ object IO {
                 finally inputStream.close()
             }
         })
+    }
+
+    def readCSV(inputFile: File): Unit = {
+        val reader = CSVReader.open(inputFile)(using defaultCSVFormat)
+        val res = reader.allWithHeaders()
+
+        res
     }
 
     def writeFile(outputFile: File, schedule: Schedule, eventStart: LocalDateTime, slotDuration: Duration): Unit = {

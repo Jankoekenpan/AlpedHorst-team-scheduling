@@ -20,7 +20,7 @@ object TimeSlot {
     import nl.alpedhorst.teamscheduling.Duration.{WholeDay, Intervals}
     import nl.alpedhorst.teamscheduling.Interval
 
-    def convertTeam(jsonTeam: JsonTeam, eventStart: LocalDateTime, slotDuration: Duration): Team = {
+    def convertTeam(jsonTeam: InputTeam, eventStart: LocalDateTime, slotDuration: Duration): Team = {
         val teamName: String = jsonTeam.name
         val unavailable: Slot => Boolean = convertUnavailable(jsonTeam.unavailability, eventStart, slotDuration)
         Team(teamName, unavailable)
