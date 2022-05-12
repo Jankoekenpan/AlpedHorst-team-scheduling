@@ -16,6 +16,7 @@ object ScheduleTest {
     val exampleTeam2 = Team("2", _ == 2)
     val exampleTeam3 = Team("3", _ == 4)
     val exampleTeam4 = Team("4", _ => false)
+    val exampleTeam5 = Team(name = "5", _ => true)
     val exampleTeams = List(exampleTeam1, exampleTeam2, exampleTeam3, exampleTeam4)
 
 }
@@ -36,6 +37,11 @@ class ScheduleSpec extends AnyFlatSpec with should.Matchers {
     "A schedule" should "not contain empty slots" in {
         val schedules = Schedule.calculate(exampleTeams, exampleTeams.length)
         assert(schedules.forall(_.allPositionsFilled))
+    }
+
+    "A conflicting team" should "end up in the set of conflicting teams" in {
+        val schedules = Schedule.calculate(exampleTeams :+ exampleTeam5, exampleTeams.length + 1)
+        assert(schedules.forall(_.conflictingTeams.contains(exampleTeam5)))
     }
 
 }

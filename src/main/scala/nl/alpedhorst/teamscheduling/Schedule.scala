@@ -15,7 +15,7 @@ case class Schedule(schedule: IndexedSeq[Team], conflictingTeams: Set[Team]) ext
 
     def allTeamsCanMakeIt: Boolean = schedule.zipWithIndex.forall((team, index) => team.canMakeIt(index))
     def allPositionsFilled: Boolean = !schedule.contains(null)
-    def containsAllTeamsExactlyOne(teams: Iterable[Team]): Boolean = schedule.toSet.size == teams.size
+    def containsAllTeamsExactlyOnce(teams: Iterable[Team]): Boolean = schedule.toSet.size == teams.size
 }
 
 object Schedule {
