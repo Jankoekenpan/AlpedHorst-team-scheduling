@@ -12,9 +12,10 @@ object IO {
 
     def readEndPoint(textFile: File): String = {
         var endPoint = System.getenv("ENDPOINT")
-        if (endPoint != null && !endPoint.isBlank) return endPoint
-        val reader = new BufferedReader(new InputStreamReader(new FileInputStream(textFile)))
-        endPoint = reader.readLine()
+        if (endPoint == null || endPoint.isBlank) {
+            val reader = new BufferedReader(new InputStreamReader(new FileInputStream(textFile)))
+            endPoint = reader.readLine()
+        }
         endPoint
     }
 
@@ -43,10 +44,18 @@ object IO {
         val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)
         val writer = new PrintWriter(new FileOutputStream(outputFile))
 
+        writer.println("=== Schedule ===")
         for ((team, index) <- schedule.zipWithIndex) {
             val timeSlot = convertIndexToTimeSlot(index, eventStart, slotDuration)
             val teamName = if team == null then "---" else team.name
             writer.println(s"${formatter.format(timeSlot.start)} - ${formatter.format(timeSlot.end)}: ${teamName}")
+        }
+        if (schedule.conflictingTeams.nonEmpty) {
+            writer.println(System.lineSeparator())
+            writer.println("=== Conflicting Teams ===")
+            for (team <- schedule.conflictingTeams) {
+                writer.println(team.name)
+            }
         }
 
         writer.flush()

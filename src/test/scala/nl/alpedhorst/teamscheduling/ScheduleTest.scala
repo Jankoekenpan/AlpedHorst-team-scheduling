@@ -25,17 +25,17 @@ class ScheduleSpec extends AnyFlatSpec with should.Matchers {
 
     "A schedule" should "contain all teams exactly once" in {
         val schedules = Schedule.calculate(exampleTeams, exampleTeams.length)
-        assert(schedules.forall(schedule => Schedule.containsAllTeamsExactlyOnce(schedule, exampleTeams)))
+        assert(schedules.forall(_.containsAllTeamsExactlyOnce(exampleTeams)))
     }
 
     "All teams" should "be able to make it in their scheduled slot" in {
         val schedules = Schedule.calculate(exampleTeams, exampleTeams.length)
-        assert(schedules.forall(Schedule.allTeamsCanMakeIt))
+        assert(schedules.forall(_.allTeamsCanMakeIt))
     }
 
     "A schedule" should "not contain empty slots" in {
         val schedules = Schedule.calculate(exampleTeams, exampleTeams.length)
-        assert(schedules.forall(Schedule.allPositionsFilled))
+        assert(schedules.forall(_.allPositionsFilled))
     }
 
 }

@@ -1,7 +1,7 @@
 lazy val root = project.in(file("."))
     .settings(
         name := "Alpe d'Horst team scheduling",
-        version := "0.1",
+        version := "0.2",
         scalaVersion := "3.1.2",
 
         libraryDependencies += "com.lihaoyi" %% "ujson" % "2.0.0",

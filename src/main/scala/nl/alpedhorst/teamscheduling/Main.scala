@@ -27,10 +27,10 @@ extension (lhs: Boolean)
                 .filter(_ match { case ujson.Obj(map) if map.contains("Teamnaam") => true; case _ => false; })
                 .map(_.asInstanceOf[ujson.Obj])
                 .map(InputTeam.jsonTeam)
-            val teams = jsonTeams.map(jsonTeam => TimeSlot.convertTeam(jsonTeam, eventStartTime, slotDuration))
+            val teams: List[Team] = jsonTeams.map(jsonTeam => TimeSlot.convertTeam(jsonTeam, eventStartTime, slotDuration)).toList
             //println(teams)
-            val schedules = Schedule.calculate(teams.toList, slotCount)
-            val schedule = schedules.head
+            val schedules: LazyList[Schedule] = Schedule.calculate(teams, slotCount)
+            val schedule: Schedule = schedules.head
             println(schedule)
             assert(schedule.zipWithIndex.forall((team, slot) => (team != null) ==> team.canMakeIt(slot)), "Not all teams can make it.")
             IO.writeFile(new File("schedule.txt"), schedule, eventStartTime, slotDuration)

@@ -4,18 +4,32 @@ import nl.alpedhorst.teamscheduling.*
 
 import java.time.{Duration, LocalDateTime}
 
-type Schedule = IndexedSeq[Team]
-extension (schedule: Schedule)
+case class Schedule(schedule: IndexedSeq[Team], conflictingTeams: Set[Team]) extends IndexedSeq[Team] {
+
     def isAvailable(slot: Slot): Boolean = schedule(slot) == null
-    def setTeam(slot: Slot, team: Team): Schedule = schedule.updated(slot, team)
+    def setTeam(slot: Slot, team: Team): Schedule = Schedule(schedule.updated(slot, team), conflictingTeams)
+    override def length: Int = schedule.length
+    override def apply(index: Int): Team = schedule(index)
+
+    override def toString: String = s"Schedule(schedule=${schedule}, conflicitingTeams=${conflictingTeams})"
+
+    def allTeamsCanMakeIt: Boolean = schedule.zipWithIndex.forall((team, index) => team.canMakeIt(index))
+    def allPositionsFilled: Boolean = !schedule.contains(null)
+    def containsAllTeamsExactlyOne(teams: Iterable[Team]): Boolean = schedule.toSet.size == teams.size
+}
 
 object Schedule {
-    def emptySchedule(slotCount: Int): Schedule = IndexedSeq.fill(slotCount)(null)
+    def emptySchedule(slotCount: Int): Schedule = Schedule(IndexedSeq.fill(slotCount)(null), Set())
 
     def calculate(teams: List[Team], slotCount: Int): LazyList[Schedule] = {
         var schedules: LazyList[Schedule] = LazyList(emptySchedule(slotCount))
         for (team <- teams) {
-            schedules = schedules.flatMap(schedule => successorSchedules(schedule, team))
+            val succeedingSchedules = schedules.flatMap(schedule => successorSchedules(schedule, team))
+            if (succeedingSchedules.isEmpty) { //team is conflicting.
+                schedules = schedules.map(schedule => schedule.copy(conflictingTeams = schedule.conflictingTeams + team))
+            } else {
+                schedules = succeedingSchedules
+            }
         }
         schedules
     }
@@ -34,12 +48,5 @@ object Schedule {
 
         result.result()
     }
-
-    def allTeamsCanMakeIt(schedule: Schedule): Boolean =
-        schedule.zipWithIndex.forall((team, index) => team.canMakeIt(index))
-    def allPositionsFilled(schedule: Schedule): Boolean =
-        !schedule.contains(null)
-    def containsAllTeamsExactlyOnce(schedule: Schedule, teams: Iterable[Team]): Boolean =
-        schedule.toSet.size == teams.size
 
 }
