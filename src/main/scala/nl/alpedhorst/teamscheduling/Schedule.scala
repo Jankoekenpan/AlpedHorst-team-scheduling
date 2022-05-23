@@ -4,7 +4,7 @@ import nl.alpedhorst.teamscheduling.*
 
 import java.time.{Duration, LocalDateTime}
 
-case class Schedule(schedule: IndexedSeq[Team], conflictingTeams: Set[Team]) extends IndexedSeq[Team] {
+final case class Schedule(schedule: IndexedSeq[Team], conflictingTeams: Set[Team]) extends IndexedSeq[Team] {
 
     def isAvailable(slot: Slot): Boolean = schedule(slot) == null
     def setTeam(slot: Slot, team: Team): Schedule = Schedule(schedule.updated(slot, team), conflictingTeams)

@@ -1,7 +1,7 @@
 package nl.alpedhorst.teamscheduling
 
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
+import java.time.format.{DateTimeFormatter, DateTimeParseException}
 
 object InputTeam {
 
@@ -20,7 +20,12 @@ object InputTeam {
         csvTeam("Teamnaam")
 
     private def convertTime(time: String): LocalTime = {
-        var localTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"))
+        var localTime: LocalTime = try {
+            LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"))
+        } catch {
+            case e: DateTimeParseException =>
+               LocalTime.parse(time, DateTimeFormatter.ofPattern("H:mm"))
+        }
         localTime
     }
 
