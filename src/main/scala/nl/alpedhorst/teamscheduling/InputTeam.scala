@@ -38,7 +38,7 @@ object InputTeam {
             val wholeDay: ujson.Value = teamJson(s"heledag_$day")
             val durationForCurrentDay: Duration = wholeDay match {
                 case ujson.Str(strValue) if "1" == strValue => Duration.WholeDay
-                case ujson.Bool(bool) => Duration.WholeDay
+                case ujson.Bool(bool) if bool => Duration.WholeDay
                 case _ =>
                     val time1 = teamJson(s"tijd_${day}1").str
                     val time2 = teamJson(s"tijd_${day}2").str
