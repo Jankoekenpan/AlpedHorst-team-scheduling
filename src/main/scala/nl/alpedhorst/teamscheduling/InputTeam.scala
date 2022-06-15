@@ -8,7 +8,15 @@ import java.time.format.{DateTimeFormatter, DateTimeParseException}
 object InputTeam {
 
     def jsonTeam(jsonTeam: ujson.Obj): InputTeam = {
-        InputTeam(teamName(jsonTeam), unavailability(jsonTeam))
+        var name: String = teamName(jsonTeam)
+        var unavailable: Unavailability = null
+        try {
+            unavailable = InputTeam.unavailability(jsonTeam)
+        } catch {
+            case t: Throwable =>
+                throw new RuntimeException(s"Team \"$name\" provided an invalid unavailability!", t)
+        }
+        InputTeam(name, unavailable)
     }
 
     def csvTeam(csvTeam: Map[String, String]): InputTeam = {
@@ -27,7 +35,7 @@ object InputTeam {
             .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("HH.mm"))))
             .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("H.mm"))))
             .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("HHmm"))))
-            .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("Hmm"))))
+            .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("Hmm")))) //this seems dubious
             .get
     }
 
