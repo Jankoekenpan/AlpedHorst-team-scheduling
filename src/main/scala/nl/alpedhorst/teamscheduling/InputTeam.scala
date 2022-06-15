@@ -8,10 +8,10 @@ import java.time.format.{DateTimeFormatter, DateTimeParseException}
 object InputTeam {
 
     def jsonTeam(jsonTeam: ujson.Obj): InputTeam = {
-        var name: String = teamName(jsonTeam)
+        val name: String = teamName(jsonTeam)
         var unavailable: Unavailability = null
         try {
-            unavailable = InputTeam.unavailability(jsonTeam)
+            unavailable = unavailability(jsonTeam)
         } catch {
             case t: Throwable =>
                 throw new RuntimeException(s"Team \"$name\" provided an invalid unavailability!", t)
