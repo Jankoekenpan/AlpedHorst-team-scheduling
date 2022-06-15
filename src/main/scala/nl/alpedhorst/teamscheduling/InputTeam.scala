@@ -1,5 +1,7 @@
 package nl.alpedhorst.teamscheduling
 
+import scala.util.Try
+
 import java.time.LocalTime
 import java.time.format.{DateTimeFormatter, DateTimeParseException}
 
@@ -20,13 +22,13 @@ object InputTeam {
         csvTeam("Teamnaam")
 
     private def convertTime(time: String): LocalTime = {
-        var localTime: LocalTime = try {
-            LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"))
-        } catch {
-            case e: DateTimeParseException =>
-               LocalTime.parse(time, DateTimeFormatter.ofPattern("H:mm"))
-        }
-        localTime
+        Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm")))
+            .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("H:mm"))))
+            .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("HH.mm"))))
+            .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("H.mm"))))
+            .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("HHmm"))))
+            .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("Hmm"))))
+            .get
     }
 
     private def fixUpEndTime(endTime: LocalTime): LocalTime =
