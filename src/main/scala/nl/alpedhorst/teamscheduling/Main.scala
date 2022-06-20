@@ -32,6 +32,7 @@ extension (lhs: Boolean)
                     jsonTeams.addOne(InputTeam.jsonTeam(jsonObject))
                 } catch {
                     case invalid: InvalidInputException => invalidTeams.addOne(s"${invalid.getMessage}; ${invalid.getCause.getMessage}")
+                    case x => x.printStackTrace()
                 })
             val teams: List[Team] = jsonTeams.map(jsonTeam => TimeSlot.convertTeam(jsonTeam, eventStartTime, slotDuration)).toList
             //println(teams)
