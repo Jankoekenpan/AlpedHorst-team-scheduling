@@ -23,17 +23,23 @@ extension (lhs: Boolean)
 
     json match {
         case ujson.Arr(jsonValues) =>
-            val jsonTeams = jsonValues
+            val jsonTeams = new scala.collection.mutable.ListBuffer[InputTeam]()
+            val invalidTeams = new scala.collection.mutable.ListBuffer[String]()
+            jsonValues
                 .filter(_ match { case ujson.Obj(map) if map.contains("Teamnaam") => true; case _ => false; })
                 .map(_.asInstanceOf[ujson.Obj])
-                .map(InputTeam.jsonTeam)
+                .foreach(jsonObject => try {
+                    jsonTeams.addOne(InputTeam.jsonTeam(jsonObject))
+                } catch {
+                    case invalid: InvalidInputException => invalidTeams.addOne(s"${invalid.getMessage}; ${invalid.getCause.getMessage}")
+                })
             val teams: List[Team] = jsonTeams.map(jsonTeam => TimeSlot.convertTeam(jsonTeam, eventStartTime, slotDuration)).toList
             //println(teams)
             val schedules: LazyList[Schedule] = Schedule.calculate(teams, slotCount)
             val schedule: Schedule = schedules.head
             println(schedule)
             assert(schedule.zipWithIndex.forall((team, slot) => (team != null) ==> team.canMakeIt(slot)), "Not all teams can make it.")
-            IO.writeFile(new File("schedule.txt"), schedule, eventStartTime, slotDuration)
+            IO.writeFile(new File("schedule.txt"), schedule, eventStartTime, slotDuration, invalidTeams)
         case _ =>
             throw new RuntimeException("Expected json array")
     }

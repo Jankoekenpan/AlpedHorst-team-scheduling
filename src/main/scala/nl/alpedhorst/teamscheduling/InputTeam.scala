@@ -5,6 +5,8 @@ import scala.util.Try
 import java.time.LocalTime
 import java.time.format.{DateTimeFormatter, DateTimeParseException}
 
+class InvalidInputException(message: String, cause: Throwable) extends RuntimeException(message, cause)
+
 object InputTeam {
 
     def jsonTeam(jsonTeam: ujson.Obj): InputTeam = {
@@ -14,7 +16,7 @@ object InputTeam {
             unavailable = unavailability(jsonTeam)
         } catch {
             case t: Throwable =>
-                throw new RuntimeException(s"Team \"$name\" provided an invalid unavailability!", t)
+                throw new InvalidInputException(s"Team \"$name\" provided an invalid unavailability!", t)
         }
         InputTeam(name, unavailable)
     }

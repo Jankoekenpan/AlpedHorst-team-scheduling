@@ -37,7 +37,7 @@ object IO {
         reader.allWithHeaders()
     }
 
-    def writeFile(outputFile: File, schedule: Schedule, eventStart: LocalDateTime, slotDuration: Duration): Unit = {
+    def writeFile(outputFile: File, schedule: Schedule, eventStart: LocalDateTime, slotDuration: Duration, invalidTeams: Iterable[String]): Unit = {
         if (outputFile.exists()) outputFile.delete()
         outputFile.createNewFile()
 
@@ -55,6 +55,13 @@ object IO {
             writer.println("=== Conflicting Teams ===")
             for (team <- schedule.conflictingTeams) {
                 writer.println(team.name)
+            }
+        }
+        if (invalidTeams.nonEmpty) {
+            writer.println(System.lineSeparator())
+            writer.println("=== Invalid Teams ===")
+            for (invalidTeam <- invalidTeams) {
+                writer.println(invalidTeam)
             }
         }
 
