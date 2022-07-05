@@ -21,6 +21,7 @@ object InputTeam {
         InputTeam(name, unavailable)
     }
 
+    @deprecated
     def csvTeam(csvTeam: Map[String, String]): InputTeam = {
         InputTeam(teamName(csvTeam), unavailability(csvTeam))
     }
@@ -28,6 +29,7 @@ object InputTeam {
     def teamName(teamJson: ujson.Obj): String =
         teamJson("Teamnaam").str
 
+    @deprecated
     def teamName(csvTeam: Map[String, String]): String =
         csvTeam("Teamnaam")
 
@@ -74,6 +76,7 @@ object InputTeam {
         mapBuilder.result()
     }
 
+    @deprecated
     def unavailability(teamCSV: Map[String, String]): Unavailability = {
         val mapBuilder = Map.newBuilder[Day, Duration]
         for (day <- 1 to 7) {
