@@ -32,13 +32,16 @@ object InputTeam {
         csvTeam("Teamnaam")
 
     private def convertTime(time: String): LocalTime = {
-        Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm")))
-            .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("H:mm"))))
-            .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("HH.mm"))))
-            .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("H.mm"))))
-            .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("HHmm"))))
-            .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("Hmm")))) //this seems dubious
-            .get
+        if time.isEmpty then
+            LocalTime.MIN
+        else
+            Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm")))
+                .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("H:mm"))))
+                .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("HH.mm"))))
+                .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("H.mm"))))
+                .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("HHmm"))))
+                .orElse(Try(LocalTime.parse(time, DateTimeFormatter.ofPattern("Hmm")))) //this seems dubious
+                .get
     }
 
     private def fixUpEndTime(endTime: LocalTime): LocalTime =
@@ -56,9 +59,6 @@ object InputTeam {
                     val time2 = teamJson(s"tijd_${day}2").str
                     val time3 = teamJson(s"tijd_${day}3").str
                     val time4 = teamJson(s"tijd_${day}4").str
-
-                    assert(time1.isBlank == time2.isBlank, s"invalid interval: time1=\"$time1\", time2=\"$time2\"")
-                    assert(time3.isBlank == time3.isBlank, s"invalid interval: time3=\"$time3\", time4=\"$time4\"")
 
                     val seqBuilder = Seq.newBuilder[Interval]
 
